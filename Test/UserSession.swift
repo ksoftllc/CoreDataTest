@@ -14,27 +14,9 @@ protocol UserSession {
     
     var roles: Set<Role>? { get }
     
-    func addToRoles(_ role:Role)
-    
-    func removeFromRoles(_ role: Role)
-    
-    func addToRoles(all rolesInSet: Set<Role>)
-    
-    func removeFromRoles(all rolesInSet: Set<Role>)
-    
-    var hashValue: Int { get }
-
 }
 
 extension UserSessionDB: UserSession {
-    func removeFromRoles(_ role: Role) {
-        self.removeFromRolesSet(role)
-    }
-    
-    func removeFromRoles(all rolesInSet: Set<Role>) {
-        self.removeFromRolesSet(rolesInSet as NSSet)
-    }
-    
     
     var roles: Set<Role>? {
         get {

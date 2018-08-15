@@ -11,8 +11,6 @@ import Foundation
 protocol Role: Hashable {
     
     var roleName: String? { get set }
-
-//    var hashValue: Int { get }
     
 }
 
