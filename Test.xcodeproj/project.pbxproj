@@ -16,6 +16,9 @@
 		38891ECA21232A660041168E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 38891EC821232A660041168E /* Model.xcdatamodeld */; };
 		38891ECC21232B070041168E /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38891ECB21232B070041168E /* UserSession.swift */; };
 		38891ECE21232FDE0041168E /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38891ECD21232FDE0041168E /* Role.swift */; };
+		38891ED02124D0060041168E /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38891ECF2124D0060041168E /* CoreDataManager.swift */; };
+		38891ED22124D2090041168E /* ModelRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38891ED12124D2090041168E /* ModelRepository.swift */; };
+		38891ED621261C710041168E /* NSManagedObjectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38891ED521261C710041168E /* NSManagedObjectExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +45,9 @@
 		38891EC921232A660041168E /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		38891ECB21232B070041168E /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		38891ECD21232FDE0041168E /* Role.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Role.swift; sourceTree = "<group>"; };
+		38891ECF2124D0060041168E /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		38891ED12124D2090041168E /* ModelRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRepository.swift; sourceTree = "<group>"; };
+		38891ED521261C710041168E /* NSManagedObjectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,9 @@
 				38891EC821232A660041168E /* Model.xcdatamodeld */,
 				38891ECD21232FDE0041168E /* Role.swift */,
 				38891ECB21232B070041168E /* UserSession.swift */,
+				38891ECF2124D0060041168E /* CoreDataManager.swift */,
+				38891ED12124D2090041168E /* ModelRepository.swift */,
+				38891ED521261C710041168E /* NSManagedObjectExtension.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -206,7 +215,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38891ED22124D2090041168E /* ModelRepository.swift in Sources */,
+				38891ED02124D0060041168E /* CoreDataManager.swift in Sources */,
 				38891ECC21232B070041168E /* UserSession.swift in Sources */,
+				38891ED621261C710041168E /* NSManagedObjectExtension.swift in Sources */,
 				38891EA821232A510041168E /* ViewController.swift in Sources */,
 				38891EA621232A510041168E /* AppDelegate.swift in Sources */,
 				38891ECA21232A660041168E /* Model.xcdatamodeld in Sources */,

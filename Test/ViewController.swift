@@ -9,10 +9,18 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        let repository = ModelRepository()
+        let metallicaFan = repository.createRole(name: "Metallica Fan", type: .Fan)
+        let johnson = repository.createUserSession(username: "jim@johnson.com", roles: [metallicaFan])
+        repository.save()
+        let userSessions = repository.fetchAllUserSession()
+        let aUser = userSessions.last
+        let aUserSessionDB = aUser as! UserSessionDB
+        print("\(aUserSessionDB)")
     }
 
     override func didReceiveMemoryWarning() {
