@@ -7,15 +7,19 @@
 //
 
 import UIKit
+import RxSwift
 
 class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
         let repository = ModelRepository()
         let metallicaFan = repository.createRole(name: "Metallica Fan", type: .Fan)
         let johnson = repository.createUserSession(username: "jim@johnson.com", roles: [metallicaFan])
+        let zeppelinFan = repository.createRole(name: "Led Zeppelin Fan", type: .Fan)
+        let smith = repository.createUserSession(username: "sam@smith.com", roles: [zeppelinFan])
         repository.save()
         let userSessions = repository.fetchAllUserSession()
         let aUser = userSessions.last

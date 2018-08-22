@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import CoreData
 
-protocol UserSession {
+protocol UserSession: PrimaryKey {
     
     var username: String? { get set }
     
@@ -61,5 +62,12 @@ extension UserSessionDB: UserSession {
         }
         removeFromRolesSet(rolesToRemove as NSSet)
     }
-    
+
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        id = uniqueInt()
+    }
+
 }
+
+

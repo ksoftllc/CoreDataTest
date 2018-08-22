@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="RoleDB" representedClassName="RoleDB" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="roleName" attributeType="String" syncable="YES"/>
         <attribute name="roleTypeRaw" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="userSession" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserSessionDB" inverseName="rolesSet" inverseEntity="UserSessionDB" syncable="YES"/>
     </entity>
     <entity name="UserSessionDB" representedClassName="UserSessionDB" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="username" attributeType="String" syncable="YES"/>
         <relationship name="rolesSet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RoleDB" inverseName="userSession" inverseEntity="RoleDB" syncable="YES"/>
     </entity>
     <elements>
-        <element name="RoleDB" positionX="205" positionY="0" width="128" height="88"/>
-        <element name="UserSessionDB" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="RoleDB" positionX="205" positionY="0" width="128" height="103"/>
+        <element name="UserSessionDB" positionX="-63" positionY="-18" width="128" height="88"/>
     </elements>
 </model>

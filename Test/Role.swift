@@ -14,7 +14,7 @@ enum RoleType: String { //Type is a reserved word in swift
     case Artist, Venue, BookingAgent, Promoter, VenueEmployee, Fan
 }
 
-protocol Role {
+protocol Role: PrimaryKey {
     
     var roleName: String? { get set }
     var roleType: RoleType? { get set }
@@ -33,5 +33,12 @@ extension RoleDB: Role {
             roleTypeRaw = roleType?.rawValue
         }
     }
-  
+
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        id = uniqueInt()
+    }
+
 }
+
+
