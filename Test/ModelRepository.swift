@@ -11,7 +11,7 @@ import CoreData
 
 class ModelRepository {
     
-    private var coreDataManager = CoreDataManager(modelName: "Model")
+    private var coreDataManager = CoreDataManager(modelName: "Model", storeType: NSSQLiteStoreType)
 
     func createRole(name: String, type: RoleType) -> Role {
         let newRole = RoleDB(context: coreDataManager.mainManagedObjectContext)

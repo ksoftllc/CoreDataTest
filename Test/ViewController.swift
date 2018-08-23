@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import RxSwift
 
 class ViewController: UIViewController {
@@ -14,6 +15,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //start with no database
+        var manager = CoreDataManager(modelName: "Model", storeType: NSSQLiteStoreType)
+        manager.destroyPersistentStore()
         
         let repository = ModelRepository()
         let metallicaFan = repository.createRole(name: "Metallica Fan", type: .Fan)
@@ -24,7 +28,11 @@ class ViewController: UIViewController {
         let userSessions = repository.fetchAllUserSession()
         let aUser = userSessions.last
         let aUserSessionDB = aUser as! UserSessionDB
-        print("\(aUserSessionDB)")
+        
+        repository.save()
+        
+        let sessions = repository.fetchAllUserSession()
+        print(sessions)
     }
 
     override func didReceiveMemoryWarning() {

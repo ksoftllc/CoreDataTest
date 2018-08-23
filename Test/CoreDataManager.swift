@@ -9,16 +9,8 @@ import CoreData
 final class CoreDataManager {
     
     // MARK: - Properties
-    
     private let modelName: String
-    
-    /** context for main queue for actions on UI */
-    private(set) lazy var mainManagedObjectContext: NSManagedObjectContext = {
-        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        //setting private background context as parent will cause changes to replicate
-        managedObjectContext.parent = self.privateManagedObjectContext
-        return managedObjectContext
-    }()
+    private let storeType: String
     
     /** context for private background queue */
     private lazy var privateManagedObjectContext: NSManagedObjectContext = {
@@ -52,7 +44,7 @@ final class CoreDataManager {
                 NSMigratePersistentStoresAutomaticallyOption : true,
                 NSInferMappingModelAutomaticallyOption : true
             ]
-            try persistentStoreCoordinator.addPersistentStore(ofType: NSInMemoryStoreType,
+            try persistentStoreCoordinator.addPersistentStore(ofType: storeType,
                                                               configurationName: nil,
                                                               at: persistentStoreURL,
                                                               options: options)
@@ -64,11 +56,27 @@ final class CoreDataManager {
         return persistentStoreCoordinator
     }()
     
-    //MARK: - Public
+    /** context for main queue for actions on UI */
+    private(set) lazy var mainManagedObjectContext: NSManagedObjectContext = {
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        //setting private background context as parent will cause changes to replicate
+        managedObjectContext.parent = self.privateManagedObjectContext
+        return managedObjectContext
+    }()
     
-    init(modelName: String) {
+    //MARK: - Init
+    /**
+     Creates instance of CoreDataManager.
+     
+     - Parameters:
+     - modelName: Name of the xcdatamodeld file
+     - storeType: A string constant (such as NSSQLiteStoreType) that specifies the store type—see Persistent Store Types for possible values.
+     
+     - Returns: instance
+     */
+    init(modelName: String, storeType: String) {
         self.modelName = modelName
-        
+        self.storeType = storeType
         setupNotificationHandling()
     }
     
@@ -76,9 +84,55 @@ final class CoreDataManager {
         saveChanges()
     }
     
-    // MARK: - Private
+    func destroyPersistentStore() {
+        guard let modelURL = Bundle.main.url(forResource: self.modelName, withExtension: "momd") else {
+            print("Missing data model - could not destroy")
+            return
+        }
+        
+        do {
+            saveChanges()
+            try persistentStoreCoordinator.destroyPersistentStore(at: modelURL, ofType: storeType, options: nil)
+        } catch  {
+            print("Unable to destroy persistent store: \(error) - \(error.localizedDescription)")
+        }
+    }
     
-    private func setupNotificationHandling() {
+    func saveChanges() {
+        //save child context changes first because those changes will push to the parent context
+        //must be a synchronous save so that all changes are pushed to parent context before
+        //parent context gets saved
+        mainManagedObjectContext.performAndWait {
+            do {
+                if self.mainManagedObjectContext.hasChanges {
+                    try self.mainManagedObjectContext.save()
+                }
+                print("main context data saved")
+            } catch {
+                print("Failed to save data changes on main thread Managed Object Context")
+                print("\(error), \(error.localizedDescription)")
+            }
+        }
+        
+        //then save parent context so that persistent store is update will all changes from both contexts
+        privateManagedObjectContext.perform {
+            do {
+                if self.privateManagedObjectContext.hasChanges {
+                    try self.privateManagedObjectContext.save()
+                }
+                print("private context data saved")
+            } catch {
+                print("Unable to Save Changes of Private Managed Object Context")
+                print("\(error), \(error.localizedDescription)")
+            }
+        }
+    }
+    
+}
+
+private extension CoreDataManager {
+    
+    func setupNotificationHandling() {
         let notificationCenter = NotificationCenter.default
         
         saveChangesIfAppTerminating(notificationCenter)
@@ -86,42 +140,18 @@ final class CoreDataManager {
         saveChangesIfAppEnteringBackground(notificationCenter)
     }
     
-    fileprivate func saveChangesIfAppTerminating(_ notificationCenter: NotificationCenter) {
+    func saveChangesIfAppTerminating(_ notificationCenter: NotificationCenter) {
         notificationCenter.addObserver(self,
                                        selector: #selector(saveChanges(_:)),
                                        name: Notification.Name.UIApplicationWillTerminate,
                                        object: nil)
     }
     
-    fileprivate func saveChangesIfAppEnteringBackground(_ notificationCenter: NotificationCenter) {
+    func saveChangesIfAppEnteringBackground(_ notificationCenter: NotificationCenter) {
         notificationCenter.addObserver(self,
                                        selector: #selector(saveChanges(_:)),
                                        name: Notification.Name.UIApplicationDidEnterBackground,
                                        object: nil)
-    }
-    
-    func saveChanges() {
-        mainManagedObjectContext.performAndWait {
-            do {
-                if self.mainManagedObjectContext.hasChanges {
-                    try self.mainManagedObjectContext.save()
-                }
-            } catch {
-                print("Failed to save data changes")
-                print("\(error), \(error.localizedDescription)")
-            }
-        }
-        
-        privateManagedObjectContext.perform {
-            do {
-                if self.privateManagedObjectContext.hasChanges {
-                    try self.privateManagedObjectContext.save()
-                }
-            } catch {
-                print("Unable to Save Changes of Private Managed Object Context")
-                print("\(error), \(error.localizedDescription)")
-            }
-        }
     }
     
 }
