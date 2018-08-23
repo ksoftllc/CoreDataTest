@@ -7,50 +7,67 @@
 //
 
 import Foundation
+import CoreData
 
-protocol UserSession {
+protocol UserSession: PrimaryKey {
     
     var username: String? { get set }
     
-    var roles: Set<Role>? { get }
-    
-    func addToRoles(_ role:Role)
-    
-    func removeFromRoles(_ role: Role)
-    
-    func addToRoles(all rolesInSet: Set<Role>)
-    
-    func removeFromRoles(all rolesInSet: Set<Role>)
-    
-    var hashValue: Int { get }
+    var roles: [Role]? { get }
 
+    func add(role: Role)
+    func add(roles: [Role])
+    
+    func remove(role: Role)
+    func remove(roles: [Role])
+    
 }
 
 extension UserSessionDB: UserSession {
-    func removeFromRoles(_ role: Role) {
-        self.removeFromRolesSet(role)
-    }
-    
-    func removeFromRoles(all rolesInSet: Set<Role>) {
-        self.removeFromRolesSet(rolesInSet as NSSet)
-    }
-    
-    
-    var roles: Set<Role>? {
+  
+    var roles: [Role]? {
         get {
-            return rolesSet as? Set<RoleModel>
-        }
-        set {
-            rolesSet = newValue as NSSet?
+            guard let rolesSet = rolesSet as? Set<RoleDB> else {
+                return nil
+            }
+            let roles = Array(rolesSet)
+            return roles
         }
     }
     
-    func addToRoles(_ role: Role) {
-        self.addToRoles(role)
+    func add(role: Role) {
+        let roleToAdd = role as! RoleDB
+        addToRolesSet(roleToAdd)
+    }
+
+    func add(roles: [Role]) {
+        var rolesToAdd = Set<RoleDB>()
+        for role in roles {
+            let roleDB = role as! RoleDB
+            rolesToAdd.insert(roleDB)
+        }
+        addToRolesSet(rolesToAdd as NSSet)
     }
     
-    func addToRoles(all rolesInSet: Set<Role>) {
-        self.addToRoles(all: rolesInSet)
+    func remove(role: Role) {
+        let roleToRemove = role as! RoleDB
+        removeFromRolesSet(roleToRemove)
+    }
+    
+    func remove(roles: [Role]) {
+        var rolesToRemove = Set<RoleDB>()
+        for role in roles {
+            let roleDB = role as! RoleDB
+            rolesToRemove.insert(roleDB)
+        }
+        removeFromRolesSet(rolesToRemove as NSSet)
+    }
+
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        id = uniqueInt()
     }
 
 }
+
+
